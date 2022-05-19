@@ -7,20 +7,25 @@
     <title>Document</title>
     <link rel="stylesheet" href="game.css">
 </head>
-<body>
-    <div id="game">
-        <h1>Tic-Tac-Toe Game</h1>
-        <div id="buttons">
-            <button id="btnStart"></button>
-            <button id="btnSave"></button>
-            <button id="btnLoad"></button>
-            <button id="btnShowRecord"></button>
-            <button id="btnDeleteStep"></button>
-            <button id="btnChangeDim"></button>
+<body>    
+    <h1>Tic-Tac-Toe Game</h1>
+    <div id="startScreen">
+        <button id="btnStart">START GAME</button>
+    </div>
+    <div id="gameScreen">
+        <div id="players">
+            <div id="player1" class="player"></div>
+            <div id="player2" class="player"></div>
         </div>
-        <div>
-            <table id="tblBoard">
-            </table>
+        <div id="gameTable">
+        </div>
+        <div id="buttons">
+            <button id="btnRestart" class="btn">Restart</button>
+            <button id="btnSave" class="btn">Save Game</button>
+            <button id="btnLoad" class="btn">Load prev. game</button>
+            <button id="btnShowRecord" class="btn">Records</button>
+            <button id="btnDeleteStep" class="btn">Delete step</button>
+            <button id="btnChangeDim" class="btn">Change dimension</button>
         </div>
     </div>
     <script src="tictactoe.js"></script>
