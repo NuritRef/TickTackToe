@@ -26,6 +26,7 @@ h1{
     padding: 30px;
     gap: 200px;
 }
+
 #gameTable{
     padding: 20px;
     background-color: rgba(81, 78, 80, 0.249);
@@ -46,6 +47,18 @@ h1{
 #players{
     display: flex;
     flex-direction: column;
+}
+
+#winGameScreen{
+    display: none;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: rgba(81, 78, 80, 0.249);
+    width: 380px;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    border: 8px rgba(192, 185, 191, 0.877) ridge;
 }
 
 .btn{

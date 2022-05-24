@@ -3,17 +3,45 @@ let rowArr = []
 let dimension = 3
 let players = [{name:null,state:null},{name:null,state:null}]
 let states = ["❌","🔴"]
-let curPlayer = players[0]
+let curPlayer ;
 let isEndGame = false
 let steps = 0
+let playerA;
+let playerB;
+let savedGame;
+let timer;
 
 
+let timerElem = document.getElementById("timer")
 let startScreen = document.getElementById("startScreen")
 let btnStart = document.getElementById("btnStart") 
 let gameScreen = document.getElementById("gameScreen")
 let gameTable = document.getElementById("gameTable")
-let playerA = document.getElementById("player1")
-let playerB = document.getElementById("player2")
+let playersScreen = document.getElementById("players")
+let winScreen = document.getElementById("winGameScreen")
+// let playerA = document.getElementById("player1")
+// let playerB = document.getElementById("player2")
+
+let restartBtn = document.getElementById("btnRestart")
+let saveBtn = document.getElementById("btnSave")
+let loadBtn = document.getElementById("btnLoad")
+let showRecordsBtn = document.getElementById("btnShowRecord")
+let deleteStepBtn = document.getElementById("btnDeleteStep")
+let ChangeDimBtn = document.getElementById("btnChangeDim")
+
+
+
+function  timerF(){
+    let totSec = 0
+    timer = setInterval(function () {
+        totSec ++
+        let hour = Math.floor(totSec / 3600);
+        let minute = Math.floor((totSec - hour * 3600) / 60);
+        var seconds = totSec - (hour * 3600 + minute * 60);
+        timerElem.innerHTML = hour.padStart(2,"0") + ":" + minute.padStart(2,"0") + ":" + seconds.padStart(2,"0");
+      }, 1000);
+}
+
 
 function changePlayer(){
     if (curPlayer==players[0]){
@@ -23,23 +51,41 @@ function changePlayer(){
 }
 
 
-function  winGameScreen(){
-    // TODO:
+function  winGame(){
+    // TODO: blink the winners squares
+    clearInterval(timer)
+    setTimeout(function(){
+        gameScreen.style.display = "none"
+        winScreen.innerText = "woohooo there is a winner"
+        winScreen.style.display = "flex"
+        },1000)
     
 }
 
-// TODO: finish!!!!!!!!!!!!!!!!
+
 function isEndOfGame(){
-    checkRows = boardArr.map(row=>row.every((square, i, row) => square.state === row[0].state && square.state!= null ))
-    // checkCols = boardArr.map()
-    // checkDiagon = 
-    rowVictory = checkRows.includes(true)
-    colVictory = false
-    diagonalVictory = false
-    // console.log(checkCols)
-    // console.log(colVictory)
-    console.log(rowVictory || colVictory || diagonalVictory)
-    return rowVictory || colVictory || diagonalVictory
+    let isEnd = false
+    // rows test
+    let checkRows = boardArr.map(row=>row.every((square, i, row) => square.state === row[0].state && square.state!= null ))
+    isEnd = checkRows.includes(true)
+    if(isEnd){return true}
+    
+    // collums test
+    let cols = boardArr[0].map((e, i) => boardArr.map(row => row[i]));
+    let checkCols = cols.map(row=>row.every((square, i, row) => square.state === row[0].state && square.state!= null ))
+    isEnd = checkCols.includes(true)
+    if(isEnd){return true}
+    
+    // diagonal1 test
+    let diagonal1 = boardArr.map((row,i)=>row[i].state)
+    isEnd = diagonal1.every(square => square === diagonal1[0] && square!= null)
+    if(isEnd){return true}
+    
+    // diagonal2 test
+    let diagonal2 = [...boardArr].reverse().map((row,i)=>row[i].state)
+    isEnd = diagonal2.every(square => square === diagonal2[0] && square!= null)
+
+    return isEnd
     
 }
 
@@ -52,12 +98,10 @@ let singleTurn = function(e){
     let curLocCol = Number(e.target.id[2])
     boardArr[curLocRow][curLocCol].state = curPlayer.state
     boardArr[curLocRow][curLocCol].stepNum = steps
-    console.log(boardArr)
-    console.log(steps)
     endOfGame = isEndOfGame()
     if (endOfGame){
-        // winGameScreen
-        alert("woohoo there is a winner!!")
+        winGame()
+        console.log("woohoo there is a winner!!")
     }
     else{changePlayer()}  
 }
@@ -94,21 +138,37 @@ function initBoardScreen(){
 }
 
 
+// init players object
 function addPlayers(){
     playerAState = states[Math.floor(Math.random() * players.length)]
     players[0].state = playerAState
     playerBState = players[0].state == states[0] ? states[1] : states[0]    
     players[1].state = playerBState
+    curPlayer = players[0]
+}
+
+
+// init players screen
+function initPlayersScreen(){
+    playerA = document.createElement("div")
+    playerA.className ="player" 
+    playerA.id = "playerA"
+    playerB = document.createElement("div")
+    playerB.className = "player"
+    playerB.id = "playerB"
     playerA.innerText = `Player A: ${playerAState}`
     playerB.innerText = `Player B: ${playerBState}`
+    playersScreen.append(playerA,playerB)  
 
 }
 
 // this function turn on the game by sending to other funcs: build the board array, deal with players, deal with board screen.
 function game(){
     initBoardArr()
-    addPlayers()
     initBoardScreen()
+    addPlayers()
+    initPlayersScreen()
+    timerF()
     gameScreen.style.display = "flex"
 }
 
@@ -125,37 +185,86 @@ startGameScreen()
 
 
 // -----------------------------------------------------------------------------------------
-// TODO:
- // add onclick to 6 buttons
+// buttons-
 
 
-function  startGameBtn(){
-// TODO:
+restartBtn.onclick = function(){
+    boardArr = []
+    players = [{name:null,state:null},{name:null,state:null}]
+    gameTable.replaceChildren()
+    playersScreen.replaceChildren()
+    game()
+}
+
+
+saveBtn.onclick = function () {
+    savedGame = {
+        "gameTable" : gameTable.cloneNode(true),
+        "boardArr" : structuredClone(boardArr), 
+        "players" : structuredClone(players), 
+        "dimension" : dimension, 
+        "playerA" : playerA, 
+        "playerB" : playerB,
+        "curPlayer" : players.indexOf(curPlayer), 
+        "steps" : steps
+    }
+}
+
+
+loadBtn.onclick = function (){
+    // init variables
+    boardArr = savedGame.boardArr
+    players = savedGame.players
+    dimension = savedGame.dimension
+    curPlayer = players[savedGame.curPlayer]
+    steps = savedGame.steps
+
+    // change screen according to variables
+    gameScreen.replaceChild(savedGame.gameTable,gameTable)
+    plainSquares = document.querySelectorAll('.square:not(.isFlipped)')
+    for (s of plainSquares){
+        s.onclick = singleTurn
+    };    
+}
+
+
+deleteStepBtn.onclick = function(){
+    // update all varibales with step back
+    let loc = ""
+    for (i=0;i<boardArr.length;i++){
+        for(j=0;j<boardArr.length;j++){
+            if (boardArr[i][j].stepNum == steps){
+                loc = `${i}_${j}`
+                console.log(loc)
+                steps --
+                boardArr[i][j].stepNum = 0
+                boardArr[i][j].state = null
+            }
+        }
+    }
+    changePlayer()
+
+    // update element with step back 
+    lastStepElem = document.getElementById(loc)
+    console.log(lastStepElem)
+    lastStepElem.classList.remove("isFlipped")
+    lastStepElem.innerText = ""
+    lastStepElem.onclick = singleTurn
+
 
 }
-function  saveGameBtn() {
-// TODO:
 
-}
-function  deleteLastStepBtn(){
-// TODO:
 
-} 
-function  loadGameBtn(){
-// TODO:
+// function  showRecordsBtn(){
+// // TODO: orit
 
-}
-function  showRecordsBtn(){
-// TODO:
+// }
+// function  changeDimBtn(){ //change the const dimension{
+// // TODO: orit
 
-}
-function  timer(){
-// TODO:
+// }
 
-}
-function  changeDimBtn(){ //change the const dimension{
-// TODO:
-
-}
+// להעלות רק כשאורית צריכה לעבוד
+// css: אם אני עושה שינויים לעשות בתוך ה- html
 
 
