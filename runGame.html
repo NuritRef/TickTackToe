@@ -9,10 +9,33 @@
 </head>
 <body>    
     <h1>Tic-Tac-Toe Game</h1>
-    <!-- timer added -->
     <p id="timer">00:00:00</p>
+    <div id="ScoresScreen">
+        <table>
+            <h1>SCORES RECORDS:</h1>
+            <tr>
+                <td><b>X-Player</b></td>
+                <td><b>O-Player</b></td>
+            </tr>
+            <tr>
+                <td id="X-rec"></td>
+                <td id="O-rec"></td>
+            </tr>
+        </table><br/>
+        <button id="btnCloseRec" class="btn">CLOSE</button>
+    </div>
+    <div id="changeDimention">
+        <h1>CHOOSE DIMENTION:</h1>
+        <select id="ddlDimention">
+            <option value="3">3*3</option>
+            <option value="4">4*4</option>
+            <option value="6">6*6</option>
+        </select>
+        <button id="btnSetDim" class="btn">SET</button>
+    </div>
+    <div id="winGameScreen"></div>
     <div id="startScreen">
-        <button id="btnStart">START GAME</button>
+        <button id="btnStart">START</button>
     </div>
     <div id="gameScreen">
         <div id="players">
@@ -22,13 +45,12 @@
         <div id="buttons">
             <button id="btnRestart" class="btn">Restart</button>
             <button id="btnSave" class="btn">Save Game</button>
-            <button id="btnLoad" class="btn">Load prev. game</button>
+            <button id="btnLoad" class="btn" disabled>Load prev. game</button>
             <button id="btnShowRecord" class="btn">Records</button>
-            <button id="btnDeleteStep" class="btn">Delete step</button>
+            <button id="btnDeleteStep" class="btn" disabled>Delete step</button>
             <button id="btnChangeDim" class="btn">Change dimension</button>
         </div>
-    </div>
-    <div id="winGameScreen"></div>
+    </div>  
     <script src="tictactoe.js"></script>
 </body>
 </html>
