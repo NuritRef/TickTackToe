@@ -5,7 +5,7 @@ let players = [{name:null, scores:0},{name:null, scores:0}]
 let states = ["X","O"]
 let curPlayer = players[0]
 let isEndGame = false
-let steps = 0
+let steps;
 let savedGame;
 let timer;
 let winner;
@@ -50,10 +50,18 @@ function  timerF(){
 }
 
 function changePlayer(){
+    
     if (curPlayer==players[0]){
         curPlayer=players[1]
     }
-    else{curPlayer=players[0]}
+    else{
+        curPlayer=players[0]
+    }
+    document.getElementById(players[0].name).className="player"
+    document.getElementById(players[1].name).className="player"
+
+    document.getElementById(curPlayer.name).className+=" currTurn"
+
 }
 
 function  winGame(){
@@ -67,31 +75,35 @@ function  winGame(){
         }
     })
 
+    if(winLineIdentifyArr!=null){
     //BLINK WINLINE
+    let inHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
+let w = winLineIdentifyArr[0]
     switch(winLineIdentifyArr[1]){
         case 'R':
-            document.getElementById(winLineIdentifyArr[0]+"_0").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById(winLineIdentifyArr[0]+"_1").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById(winLineIdentifyArr[0]+"_2").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            break;
+            
+            for(let i=0;i<dimension;i++){
+                document.getElementById(winLineIdentifyArr[0]+"_"+i).innerHTML = inHTML
+            }
+             break;
         case 'C':
-            document.getElementById("0_"+winLineIdentifyArr[0]).innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById("1_"+winLineIdentifyArr[0]).innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById("2_"+winLineIdentifyArr[0]).innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
+            debugger
+            for(let i=0;i<dimension;i++){
+                document.getElementById(i+"_"+winLineIdentifyArr[0]).innerHTML = inHTML
+            }
             break;
         case 'D':
-            if(winLineIdentifyArr[0]=="0"){
-            document.getElementById("0_0").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById("1_1").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById("2_2").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
+            if(w=="0"){
+                for(let i=0;i<dimension;i++)
+                    document.getElementById(i+"_"+i).innerHTML = inHTML
             }
             else{
-            document.getElementById("0_2").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById("1_1").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
-            document.getElementById("2_0").innerHTML = "<img src='IMG/" + winner + "bold.png' alt='' />"
+                for(let i=0;i<dimension;i++)
+                    document.getElementById(i+"_"+(2-i)).innerHTML = inHTML
             }
-        break;
-        }
+        break;   
+    }
+    }
     
     //PRINT MESSAGE WINNER+SCORES
     clearInterval(timer)
@@ -171,7 +183,6 @@ let singleTurn = function(e){
     endOfGame = isEndOfGame()
     if (endOfGame){
         winGame()
-        //console.log("woohoo there is a winner!!")
     }
     else{changePlayer()} 
     deleteStepBtn.disabled=false
@@ -180,6 +191,9 @@ let singleTurn = function(e){
 
 // this function init the board array according to the dimension
 function initBoardArr(){
+    boardArr = []
+    steps = 0
+    winLineIdentifyArr=null
     for ( let i=0;i<dimension;i++){
         for (let j=0;j<dimension;j++){
             rowArr.push({state:null,stepNum:0})
@@ -218,6 +232,7 @@ function initPlayers(){
     players[0].name = 'X'
     players[1].name = 'O'
     curPlayer = players[Math.floor(Math.random() * players.length)]
+
 }
 
 
@@ -227,21 +242,24 @@ function initPlayersScreen(){
 
     playerA = document.createElement("div")
     playerA.className ="player" 
-    playerA.id = "playerA"
+    playerA.id = "X"
     playerA.innerHTML = `<span><b>Player ${players[0].name} scores:</b></span><br /><hr />`
     playerA.innerHTML += `<span>${players[0].scores}</span>`
+    if(curPlayer.name=="X")
+        playerA.className+=" currTurn"
 
     VS = document.createElement("h1")
     VS.innerHTML = `VS`
 
     playerB = document.createElement("div")
     playerB.className = "player"
-    playerB.id = "playerB"
+    playerB.id = "O"
     playerB.innerHTML = `<span><b>Player ${players[1].name} scores:</b></span><br /><hr />`
     playerB.innerHTML += `<span>${players[1].scores}</span>`
+    if(curPlayer.name=="O")
+        playerB.className+=" currTurn"
 
     playersScreen.append(playerA,VS,playerB)  
-
 }
 
 function deleteChildren(elem) {
@@ -264,6 +282,7 @@ function game(){
 
 // this function is called first, dealls with start screen inputs/buttons and send to start game function when buttons is clicked.
 function startGameScreen(){
+    gameTable.replaceChildren()//delete children
     btnStart.onclick = function(){
         startScreen.style.display = 'none'
         document.body.style.backgroundImage = 'none'
@@ -278,10 +297,10 @@ startGameScreen()
 // buttons-
 
 restartBtn.onclick = function(){
-    boardArr = []
-    gameTable.replaceChildren()
+    gameTable.replaceChildren()//delete children
     startScreen.style.display = 'none'
     winScreen.style.display = 'none'
+    clearInterval(timer)
     game()
 }
 
@@ -323,8 +342,6 @@ deleteStepBtn.onclick = function(){
     let loc = ""
     for (i=0;i<dimension;i++){
         for(j=0;j<dimension;j++){
-            console.log(boardArr[i][j].stepNum)
-            console.log("steps:" + steps)
             if (boardArr[i][j].stepNum == steps && boardArr[i][j].stepNum != 0){
                 loc = `${i}_${j}`
                 boardArr[i][j].stepNum = 0

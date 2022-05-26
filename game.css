@@ -3,14 +3,11 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* padding: 100px; */
     background-image: url(img/BG.png);
     background-color: rgb(178, 178, 178);
 }
-/* orit */
+
 h1{
-    /* position: absolute; */
-    /* top: 5%; */
     padding: 15px;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     font-size: 30pt;
@@ -23,8 +20,6 @@ hr{
 }
 #startScreen{
     display: flex;
-    /* background-color: rgb(14, 25, 31); */
-    /* border: 8px rgba(192, 185, 191, 0.877) ridge;  */
     padding: 70px;
     font-size: 20px;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
@@ -57,7 +52,6 @@ hr{
     width:500px;
     height: 300px;
     padding: 10px;
-    /* gap: 100px; */
     background-color: rgb(241, 234, 170);
     border: 1pt solid black;
     border-radius: 25px;
@@ -87,7 +81,6 @@ hr{
     width:400px;
     height: 300px;
     padding: 10px;
-    /* gap: 100px; */
     background-color: rgb(241, 234, 170);
     border: 1pt solid black;
     border-radius: 25px;
@@ -103,7 +96,6 @@ hr{
 
 #gameScreen{
     display: none;
-    /* flex-direction: row; */
     padding: 40px;
     gap: 100px;
     background-color: rgb(240, 218, 18);
@@ -113,8 +105,6 @@ hr{
 }
 
 #gameTable{
-    /* orit */
-    /* background-image: url(IMG/grid.PNG); */
     background-repeat: no-repeat;
     background-position: center;
     background-size:contain;
@@ -139,7 +129,6 @@ hr{
     text-align: center;
 }
 
-/* orit */
 #timer{
     padding:10px 20px;
     border: 8px rgba(192, 185, 191, 0.877) ridge;
@@ -150,7 +139,6 @@ hr{
 
 }
 
-/* orit */
 #winGameScreen{
     display: none;
     flex-wrap: wrap;
@@ -174,13 +162,11 @@ hr{
 
 }
 
-/* orit */
 .blinking{
     font-weight: bold;
     font-size: 40px;
     animation:blinkingText 1.2s infinite;
 }
-/* orit */
 
 @keyframes blinkingText{
     0%{     color: #000;    }
@@ -195,7 +181,6 @@ hr{
     height: 60px;
     color: white;
     font-size: 12pt;
-    /* border: 8px rgba(192, 185, 191, 0.877) ridge;  */
     padding: 10px;
     justify-content: center;
     align-items: center;
@@ -209,11 +194,9 @@ hr{
 }
 
 .player{
-    /* display: flex; */
-    width: 160px;
-    height: 60px;
+    width: 200px;
+    height: 80px;
     color: black;
-    /* border: 8px rgba(192, 185, 191, 0.877) ridge;  */
     font-size: 20px;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     padding: 10px;
@@ -222,20 +205,25 @@ hr{
     text-align: center;
 }
 
-/* orit */
+.currTurn{
+    background-color: rgb(241, 202, 5);
+    border: 1px solid black;
+    border-radius: 25px;
+    box-shadow: 2px;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 5px 5px 0px;
+}
+
 .square{
     display: flex;
     position: relative;
-    /* background-color: rgb(167, 163, 165); */
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* border-radius: 1.5rem; */
-    /*   */
     user-select: none;
+    /* border: 1px solid black; */
 }
 
-/* orit */
+
 .square3{
     width: 100px;
     height: 100px;
@@ -253,6 +241,7 @@ hr{
 
 .square IMG{
     animation-delay: 6s;
+    object-fit:scale-down;
 }
 
 .frontSquare{
@@ -279,9 +268,4 @@ hr{
     transform: rotateY(0) rotateZ(0);
 }
 
-/* .square:hover{
-    cursor: pointer;
-    background-color: rgb(98, 101, 100);
-    box-shadow: inset 0px 0px 0px 1px black;
-} */
 
